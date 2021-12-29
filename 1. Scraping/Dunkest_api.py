@@ -1,3 +1,4 @@
+
 from webdriver_manager.chrome import ChromeDriverManager
 
 import selenium
@@ -92,12 +93,13 @@ class dunkest():
             df = pd.DataFrame()
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             last_page = int(self.driver.find_element_by_xpath('//*[@class = "paginationjs-page paginationjs-last J-paginationjs-page"]').text)
+            print(last_page,' pages')
             counter = 0
             while counter < last_page:
                 try:
                     tab = self.driver.find_element_by_xpath('/html/body/main/div[2]/table')
                     source = tab.get_attribute('innerHTML')
-                    soup = bs(source,'lxml')
+                    soup = bs(source)
                     data = []
                     table_body = soup.find('tbody')
 
