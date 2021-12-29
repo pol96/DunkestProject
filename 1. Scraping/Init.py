@@ -1,28 +1,36 @@
+###################
+##   Libraries   ##
+###################
+
+# Importing std Libraries to be used 
 import sys
 import os
 import yaml
 from datetime import date
 from datetime import datetime
-module_path = os.path.abspath(os.path.join('..'))
-if module_path not in sys.path:
-    sys.path.append(module_path+"\\py")
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
 from time import sleep
 import pandas as pd
 import shutil
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+#Importing Custom scraping Libraries
 from BasketRef_api import NBA
 from Dunkest_api import dunkest
 from Salary_api import salaries
 
-with open(module_path+"\\py\\credentials.yml", "r") as stream:
+#Define env Path (switch based on credentials paths)
+module_path = r"C:\Users\ptico\Google Drive\DUNKEST Project\1. Scraping\py\credentials.yml"
+
+
+#Load Credentials
+with open(module_path, "r") as stream:
     try:
         credentials_dict = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
         print(exc)
 
-# giornata dunkest
+# giornata dunkest 
 cal = pd.read_csv(r'C:\ProgramData\MySQL\MySQL Server 8.0\Uploads\Dun_calendar.csv',sep = ';')
 d = '0'+str(date.today().day) if date.today().day <10 else str(date.today().day)
 m = '0'+str(date.today().month) if date.today().day <10 else str(date.today().month)
@@ -36,6 +44,11 @@ if (date(date.today().year,9,30)<date.today()<date(date.today().year,12,31)):
 else:
     season = date.today().year
 
+###################
+##   Functions   ##
+###################
+
+#Download dunkest
 def dunkest_package(mail = credentials_dict['user'], password = credentials_dict['pwd'],players = False,giornata = 2):
     cal,pl,cr = pd.DataFrame(),pd.DataFrame(),pd.DataFrame()
     credits = dunkest(email = mail,pwd = password)
@@ -52,6 +65,8 @@ def dunkest_package(mail = credentials_dict['user'], password = credentials_dict
         pl = credits.dunkest_scraping(id_players = range(1,1050))
     credits.driver_quit()
     return(cr, cal, pl)
+
+#Download NBA (Basketball Reference)
 def nba_package(year = 2022):
     
     players, stats = pd.DataFrame(),pd.DataFrame()
@@ -65,6 +80,8 @@ def nba_package(year = 2022):
     if f'{str(date.today().month)}/{str(date.today().day)}' == '10/10':
         info.year_calendar()
     return(players, stats)
+
+# Automatized download
 def downloads(season, dun_giornata):
     print(f'Stagione: {season}, Giornata dunkest: {dun_giornata}')
     print('NBA Download ....', end = ' ')
@@ -92,11 +109,18 @@ def downloads(season, dun_giornata):
             print(f'No Data Available for {pr}')
     print('\nProcess Terminated.')
 
+#################
+## Run Process ##
+#################
+
 print(f'Process Start at: {datetime.now()}')
 sleep(.66)
 sleep(1)
-bck_path = r'C:\Users\ptico\Google Drive\DUNKEST Project\weekly_backup'
-shutil.make_archive(bck_path + '\\bck_'+date.today().strftime('%Y_%m_%d'), 'zip', r'C:\ProgramData\MySQL\MySQL Server 8.0\Uploads')
+try:
+    bck_path = r'C:\Users\ptico\Google Drive\DUNKEST Project\weekly_backup' # Switch with your specific repo for backups
+    shutil.make_archive(bck_path + '\\bck_'+date.today().strftime('%Y_%m_%d'), 'zip', r'C:\ProgramData\MySQL\MySQL Server 8.0\Uploads')
+except:
+    print('No backup stored')
 print(f'new Backup Folder uploaded in {bck_path}')
 sleep(.66)
 downloads(season = season,dun_giornata = dun_giornata)
