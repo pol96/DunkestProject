@@ -23,7 +23,7 @@ def salaries(tot_years = [2019,2020,2021]):
 
         tab = driver.find_element_by_xpath('//*[@class="hh-salaries-ranking"]')
         source = tab.get_attribute('innerHTML')
-        soup = bs(source,'lxml')
+        soup = bs(source)
         data = []
         table_body = soup.find('tbody')
 
