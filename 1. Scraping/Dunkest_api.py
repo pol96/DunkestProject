@@ -78,7 +78,7 @@ class dunkest():
         self.driver.execute_script(myurlAction)
         window_after = self.driver.window_handles[1]
         self.driver.switch_to_window(window_after)
-        sleep(0.66)
+        sleep(60)
         for week in weeks:
             if self.verbose:
                 print(week, end = '')
