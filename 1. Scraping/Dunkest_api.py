@@ -34,7 +34,7 @@ class dunkest():
             driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=chrome_options)
         else:
             driver = webdriver.Chrome(ChromeDriverManager().install())
-        driver.maximize_window()
+        # driver.maximize_window() # we want driver to handle small win
         # go to the home page
         driver.get(self.URL)
         sleep(4)
