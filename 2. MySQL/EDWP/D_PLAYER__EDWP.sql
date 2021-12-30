@@ -15,21 +15,20 @@ select * from
 						colleges College
 				from 	stg.nbaplayers n													
 					inner join stg.par_season p
-						on cast(p.seasonID as signed) between n.year_min-1 and n.year_max-1)t 			# define a player career either up-to-date (if currently playing) or the whole playing period 
+						on cast(p.seasonID as signed) between n.year_min-1 and n.year_max-1)t
 		left join 
 				(select nba, t.contract, c.contract ContractValue, year, dist 
 				from 
 					(select * from 
 						(select *, rank() over(partition by nba order by dist) rnk
-						from pw0_distance)a
+						from stg.pw0_distance)a
 						where rnk = 1 and ((dist = 7  and contract = 'BJ Boston') or dist <> 7)
 					  )t
-				inner join stg.contracts c																# attach per year contracts value for each single player
+				inner join stg.contracts c
 					on 	c.player = t.contract) hook
 		on 	concat(t.name,' ',t.lastname) = hook.nba
 			and t.seasonID = hook.year)t
 on duplicate key update
 	updatedate = curdate(),
     contractvalue = t.contractvalue
-	;
-    
+;

@@ -5,7 +5,6 @@ truncate table stg.nbacalendar;
 truncate table stg.nbaplayers;
 truncate table stg.nbastats;
 truncate table stg.teams;
-
 load data infile 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/contracts.csv'
 into table stg.contracts
 fields terminated by ';'

@@ -10,8 +10,8 @@ from(
         curdate() ins,
         curdate() upd
 	from 
-				(select 																			# select baseline for calendar 
-					str_to_date(GameDate, "%Y-%m-%d") as GameDate,
+				(select 																		
+					str_to_date(GameDate, '%Y-%m-%d') as GameDate,
 					trim(Visitor) as Visitor,
 					trim(Home) as Home,
 					case 
@@ -25,11 +25,11 @@ from(
 					  trim(h.abbreviation) visitor
 					, trim(v.abbreviation) home
 					, case    
-						when str_to_date(Date,"%d/%m") between '0000-01-01' and '0000-08-30' then str_to_date(concat(convert(year(sysdate())+1,char),Date), "%Y%d/%m")   
-						else str_to_date(concat(convert(year(sysdate()),char),Date), "%Y%d/%m") 
+						when str_to_date(Date,'%d/%m') between '0000-01-01' and '0000-08-30' then str_to_date(concat(convert(year(sysdate())+1,char),Date), '%Y%d/%m')   
+						else str_to_date(concat(convert(year(sysdate()),char),Date), '%Y%d/%m') 
 					  end GameDate
 					, case    
-						when str_to_date(Date,"%d/%m") between '0000-01-01' and '0000-08-30' then year(sysdate())-1
+						when str_to_date(Date,'%d/%m') between '0000-01-01' and '0000-08-30' then year(sysdate())-1
 						else year(sysdate())
 					  end SeasonID
 					, cast(replace(trim(DunGameDate), 'Giornata','') as signed) DunGameDate
@@ -39,13 +39,13 @@ from(
 					inner join stg.teams v
 						on v.full_name = d.visitor
 				order by GameDate, DunGameDate) dun
-		on 		nba.GameDate between date_add(dun.GameDate, interval -1 day) and dun.GameDate		# attach information for Dunkest Calendar
+		on 		nba.GameDate between date_add(dun.GameDate, interval -1 day) and dun.GameDate
 			and nba.Home = dun.Home
 			and nba.Visitor = dun.Visitor
-		inner join 																					# fitering for correct periods (with par_season)
+		inner join
 			(select cast(seasonID as signed) seasonID,
-					str_to_date(start,"%d/%m/%Y") as Start,
-					str_to_date(end,"%d/%m/%Y") as End
+					str_to_date(start,'%d/%m/%Y') as Start,
+					str_to_date(end,'%d/%m/%Y') as End
 			 from stg.par_season
 			) par
 		on nba.GameDate between par.start and par.end
@@ -53,3 +53,4 @@ from(
     
 on duplicate key update
 	updatedate = curdate();
+	

@@ -9,7 +9,7 @@ select * from
 		cast(year_founded as signed) FoundationYr,
 		curdate() ins,
 		curdate() upd
-	from teams)t
+	from stg.teams)t
     on duplicate key update
 		fullname = t.fullname,
         nickname = t.nickname,
@@ -17,4 +17,4 @@ select * from
         state = t.state,
         foundationyr = t.foundationyr,
         updatedate = curdate()
-		;
+;

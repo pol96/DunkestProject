@@ -1,4 +1,4 @@
-insert into edwp.f_stats(GameId,gamedate,seasonid,DunWeek,player,PlayerID,TeamID,OpponentID,GameLocation,GameResult,AgeDays,AgeYr,Credits,
+insert into edwp.f_stat(GameId,gamedate,seasonid,DunWeek,player,PlayerID,TeamID,OpponentID,GameLocation,GameResult,AgeDays,AgeYr,Credits,
 						 PDK,Sec,Min,FGM,FGA,P3M,P3A,FTM,FTA,OREB,DREB,AST,STL,BLK,TOV,Fouls,PTS,GameScore,PlusMinus,InsertDate,UpdateDate)                        
 	select * from
 			(select 	
@@ -41,7 +41,7 @@ insert into edwp.f_stats(GameId,gamedate,seasonid,DunWeek,player,PlayerID,TeamID
                   curdate() ins,
                   curdate() upd
 			from
-					(select 															# select all info coming from source, adding player name and info if join closes, otherwise put it in without 
+					(select 
 						p.playerid,
 						p.DotName,
 						player,
@@ -88,11 +88,11 @@ insert into edwp.f_stats(GameId,gamedate,seasonid,DunWeek,player,PlayerID,TeamID
 						left join edwp.d_player p
 						on  concat(p.Name,' ',p.LastName) = n.player 
 							and s.seasonid = p.seasonID) t1
-			inner join edwp.d_calendar c 												# add game info 
+			inner join edwp.d_calendar c 
 				on c.gamedate = t1.gamedate
 				   and case when gamelocation = 'Visit' then c.home = t1.opponentid and c.visitor = t1.teamid else c.home = t1.teamid and c.visitor = t1.opponentid end
 			left join 
-					(select 															# add if available dunkest week
+					(select
 						 Player,
 						 Team,
 						 cast(format(PTS,0) as signed) as  PTS,
@@ -126,4 +126,5 @@ insert into edwp.f_stats(GameId,gamedate,seasonid,DunWeek,player,PlayerID,TeamID
 				and t1.oreb = cast(t2.oreb as signed)
 				and t1.dreb = cast(t2.dreb as signed))t
 on duplicate key update
-	updatedate = curdate();
+	updatedate = curdate()
+;
