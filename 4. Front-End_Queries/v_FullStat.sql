@@ -6,7 +6,7 @@ select
     s.OpponentID,
     case when GameLocation = 'Visit' then o.City else t.City end GameCity,
     case when GameLocation = 'Visit' then o.State else t.State end GameState,
-    p.Player,
+    s.Player,
     p.BirthDate,
     substr(p.Position,1,1) Position,
     round(p.Height*0.3048,2) Height,
