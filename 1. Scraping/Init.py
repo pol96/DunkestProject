@@ -36,7 +36,7 @@ d = '0'+str(date.today().day) if date.today().day <10 else str(date.today().day)
 m = '0'+str(date.today().month) if date.today().day <10 else str(date.today().month)
 
 day = d+'/'+m
-dun_giornata = int(cal[cal['Date'] == day]['DUN'].unique()[0].replace('Giornata ',''))
+dun_giornata = int(cal[cal['Date'] == cal[cal['Date'] <= day]['Date'].max()]['DUN'].unique()[0].replace('Giornata ',''))
 
 #season
 if (date(date.today().year,9,30)<date.today()<date(date.today().year,12,31)):
@@ -88,8 +88,8 @@ def downloads(season, dun_giornata):
     npl,nstats = nba_package(year = season)
     print('Done', end = '\n++++++++++++++++++++++++++++++\n')
     print('Dunkest Download ....', end = ' ')
-    dcr, dcal, dpl = dunkest_package(giornata = dun_giornata)
-    print('Done', end = '\n++++++++++++++++++++++++++++++\n')
+#    dcr, dcal, dpl = dunkest_package(giornata = dun_giornata)
+#    print('Done', end = '\n++++++++++++++++++++++++++++++\n')
     print('Salaries Download ....', end = ' ')
     sal = salaries(tot_years = [season-1])
     print('Done', end = '\n++++++++++++++++++++++++++++++\n')
@@ -97,9 +97,9 @@ def downloads(season, dun_giornata):
     dwnld = [[npl,nstats,dcr,dcal,dpl,sal],
         ['NBA_Active_Players.csv',
          'NBA_Players_Stats.csv',
-         'Dun_Credits.csv',
-         'Dun_Calendar.csv',
-         'Dun_Players.csv',
+#         'Dun_Credits.csv',
+#         'Dun_Calendar.csv',
+#         'Dun_Players.csv',
          'contracts.csv']]
     for i in range(0,len(dwnld[1])):
         if dwnld[0][i].shape[0]>0:

@@ -28,6 +28,7 @@ select * from
 					on 	c.player = t.contract) hook
 		on 	concat(t.name,' ',t.lastname) = hook.nba
 			and t.seasonID = hook.year)t
+	where seasonid in (select max(year) from stg.contracts)
 on duplicate key update
 	updatedate = curdate(),
     contractvalue = t.contractvalue
