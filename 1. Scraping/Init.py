@@ -75,10 +75,12 @@ def nba_package(year = 2022):
     if  ((date(date.today().year,9,30)<date.today()<date(date.today().year +1,6,30)) or \
         (date(date.today().year -1,9,30)<date.today()<date(date.today().year ,6,30))):
         players = info.active_players()
+        print(f'Active players correctly downloaded... \n{player.shape[0]} Currently playing ...')
         stats = info.nba_stats(players)
-        
+        print(f'Stats downloaded for selected season: {info.season} ...')
     if f'{str(date.today().month)}/{str(date.today().day)}' == '10/10':
         info.year_calendar()
+        print(f'new season calendar downloaded')
     return(players, stats)
 
 # Automatized download
