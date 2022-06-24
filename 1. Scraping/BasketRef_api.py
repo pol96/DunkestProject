@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup as bs
 import pandas as pd
 import string
 import datetime
+import time
 
 class NBA():
     stats = ['game_season', 'date_game', 'age', 'team_id', 'game_location', 'opp_id', 'game_result','gs', 'mp', 'fg',
@@ -56,6 +57,8 @@ class NBA():
         if self.verbose:
             print(db.shape[0])
         for p in range(0,db.shape[0]):
+            start_time = time.time()
+            print(f'{p} - {db.iloc[p,1]+str(self.season)} ...', end = ' ')
             try:
                 df = pd.DataFrame()
                 st_url = db.iloc[p,1]+str(self.season)
@@ -77,6 +80,7 @@ class NBA():
             except:
                 raise TypeError(f'404: {st_url} not found')
                 pass
+            print(f'execution time: {round(time.time()-start_time,2)}')
         return(data)
     
     def year_calendar (self):
